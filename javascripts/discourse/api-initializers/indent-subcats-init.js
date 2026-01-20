@@ -1,10 +1,11 @@
 import { apiInitializer } from "discourse/lib/api";
 
 export default apiInitializer("1.0.0", (api) => {
+  const site = api.container.lookup("service:site"); // Get it here, once
+  
   api.onPageChange(() => {
     requestAnimationFrame(() => {
       try {
-        const site = api.lookup("service:site"); // Fixed line
         if (!site?.categories) return;
 
         const categoryMap = new Map(site.categories.map(c => [c.id, c]));
