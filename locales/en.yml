@@ -1,5 +1,5 @@
 en:
   theme_metadata:
-    description: "TODO"
+    description: "Discourse indented subcategories"
     settings:
-      example_setting: "A description of a setting."
+      indent_size: "Indentation size in em units per nesting level. The minimum = 0.5 and maximum = 3"

@@ -1,5 +1,5 @@
-# **Theme Name**
+# Discourse Indented Subcategories
 
-**Theme Summary**
+A Discourse theme component that allows forum administrators to indent all subcategories.  
 
-For more information, please see: **url to meta topic**
+There is one setting that adjust's the indent amount between 0.5em and 3em (default is 1em).

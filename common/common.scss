@@ -1,1 +1,15 @@
-// Theme's SCSS
+// # indent size var # 
+
+:root {
+  --subcategory-indent-size: #{$indent_size}em;
+}
+
+// # indent all the subcategories by the indent var #
+
+.sidebar-section-link-wrapper[data-category-id] .sidebar-section-link {
+  --subcategory-indent: calc(
+     var(--d-sidebar-row-horizontal-padding, 0.5rem) +
+     (var(--subcategory-depth, 0) * var(--subcategory-indent-size))
+     );
+     padding-left: var(--subcategory-indent);
+}
