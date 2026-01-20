@@ -1,2 +1,7 @@
-example_setting:
-  default: true
+indent_size:
+  default: 1
+  type: float
+  min: 0.5
+  max: 3
+  description: 
+    en: "Indentation size in em units per nesting level. Default is 1, the minimum = 0.5 and maximum = 3."
