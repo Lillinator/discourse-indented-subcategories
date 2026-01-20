@@ -1,10 +1,11 @@
 import { apiInitializer } from "discourse/lib/api";
 
 export default apiInitializer("1.0.0", (api) => {
+  const site = api.container.lookup("service:site"); // Get it here, once
+  
   api.onPageChange(() => {
     requestAnimationFrame(() => {
       try {
-        const site = api.container.lookup("service:site");
         if (!site?.categories) return;
 
         const categoryMap = new Map(site.categories.map(c => [c.id, c]));
@@ -55,7 +56,6 @@ export default apiInitializer("1.0.0", (api) => {
         styleTag.textContent = css;
         document.head.appendChild(styleTag);
         
-      // Log erros to the console
       } catch (e) {
         console.error("Indent Subcategories error:", e);
       }
