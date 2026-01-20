@@ -4,7 +4,7 @@ export default apiInitializer("1.0.0", (api) => {
   api.onPageChange(() => {
     requestAnimationFrame(() => {
       try {
-        const site = api.container.lookup("service:site");
+        const site = api.lookup("service:site"); // Fixed line
         if (!site?.categories) return;
 
         const categoryMap = new Map(site.categories.map(c => [c.id, c]));
@@ -55,7 +55,6 @@ export default apiInitializer("1.0.0", (api) => {
         styleTag.textContent = css;
         document.head.appendChild(styleTag);
         
-      // Log erros to the console
       } catch (e) {
         console.error("Indent Subcategories error:", e);
       }
