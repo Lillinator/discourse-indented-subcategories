@@ -1,20 +1,28 @@
 import { apiInitializer } from "discourse/lib/api";
 
 export default apiInitializer("1.0.0", (api) => {
-  const site = api.container.lookup("service:site"); // Get it here, once
-  
+  const site = api.container.lookup("service:site");
+  console.log("Indent Subcategories: Initializer loaded."); // Debug: Initializer load
+
   api.onPageChange(() => {
+    console.log("Indent Subcategories: onPageChange triggered."); // Debug: Page change event
     requestAnimationFrame(() => {
       try {
-        if (!site?.categories) return;
+        if (!site?.categories) {
+          console.log("Indent Subcategories: No site categories found, returning."); // Debug: No categories
+          return;
+        }
 
         const categoryMap = new Map(site.categories.map(c => [c.id, c]));
+        console.log("Indent Subcategories: Category map created, size:", categoryMap.size); // Debug: Map created
 
-        // Find the sidebar section (stable parent)
         const sidebarSection = document.querySelector('.sidebar-section[data-section-name="categories"]');
-        if (!sidebarSection) return;
+        if (!sidebarSection) {
+          console.log("Indent Subcategories: Sidebar section not found, returning."); // Debug: Sidebar section missing
+          return;
+        }
+        console.log("Indent Subcategories: Sidebar section found."); // Debug: Sidebar section found
 
-        // Build depth map and inject as style tag
         const depths = new Map();
         
         categoryMap.forEach((category, categoryId) => {
@@ -39,12 +47,14 @@ export default apiInitializer("1.0.0", (api) => {
             depths.set(categoryId, depth);
           }
         });
+        console.log("Indent Subcategories: Depths map generated, entries:", depths.size, [...depths.entries()]); // Debug: Depths map content
 
-        // Remove old style tag if exists
         const oldStyle = document.getElementById('subcategory-indent-styles');
-        if (oldStyle) oldStyle.remove();
+        if (oldStyle) {
+          oldStyle.remove();
+          console.log("Indent Subcategories: Removed old style tag."); // Debug: Old style removed
+        }
 
-        // Create new style tag with specific rules
         const styleTag = document.createElement('style');
         styleTag.id = 'subcategory-indent-styles';
         
@@ -54,10 +64,13 @@ export default apiInitializer("1.0.0", (api) => {
         });
         
         styleTag.textContent = css;
+        console.log("Indent Subcategories: Generated CSS content:", css); // Debug: Generated CSS
+        
         document.head.appendChild(styleTag);
+        console.log("Indent Subcategories: Style tag appended to head."); // Debug: Style tag appended
         
       } catch (e) {
-        console.error("Indent Subcategories error:", e);
+        console.error("Indent Subcategories error:", e); // Debug: Catch errors
       }
     });
   });
