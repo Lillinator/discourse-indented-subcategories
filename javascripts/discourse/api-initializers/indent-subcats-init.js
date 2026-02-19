@@ -17,7 +17,7 @@ export default apiInitializer("1.0.0", (api) => {
         const categoryMap = new Map(site.categories.map(c => [c.id, c]));
         console.log("Indent Subcategories: Category map created, size:", categoryMap.size);
 
-        // This selector is now confirmed to be present in the mobile DOM *if given enough time*
+        // This selector is confirmed to be present in the mobile DOM *if given enough time*
         const sidebarSection = document.querySelector('.sidebar-section[data-section-name="categories"]');
         if (!sidebarSection) {
           console.log("Indent Subcategories: Sidebar section not found, returning.");
@@ -76,13 +76,14 @@ export default apiInitializer("1.0.0", (api) => {
       }
     };
 
-    // Conditional execution based on device type
-    if (site.isMobile) {
-      console.log("Indent Subcategories: Mobile detected, applying setTimeout.");
-      setTimeout(executeIndentationLogic, 100); // Apply delay for mobile
+    // Conditional execution based on viewport width for small viewports (mobile-like)
+    // Using a common Discourse mobile breakpoint, e.g., 900px, but you can adjust if needed.
+    if (window.innerWidth <= 900) { // Using innerWidth for a more reliable mobile check
+      console.log("Indent Subcategories: Small viewport detected (innerWidth <= 900), applying setTimeout.");
+      setTimeout(executeIndentationLogic, 100); // Apply delay for small viewports
     } else {
-      console.log("Indent Subcategories: Desktop/Tablet detected, applying requestAnimationFrame.");
-      requestAnimationFrame(executeIndentationLogic); // Use requestAnimationFrame for other devices
+      console.log("Indent Subcategories: Large viewport detected, applying requestAnimationFrame.");
+      requestAnimationFrame(executeIndentationLogic); // Use requestAnimationFrame for larger viewports
     }
   });
 });
