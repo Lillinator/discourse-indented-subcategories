@@ -2,26 +2,28 @@ import { apiInitializer } from "discourse/lib/api";
 
 export default apiInitializer("1.0.0", (api) => {
   const site = api.container.lookup("service:site");
-  console.log("Indent Subcategories: Initializer loaded."); // Debug: Initializer load
+  console.log("Indent Subcategories: Initializer loaded.");
 
   api.onPageChange(() => {
-    console.log("Indent Subcategories: onPageChange triggered."); // Debug: Page change event
-    requestAnimationFrame(() => {
+    console.log("Indent Subcategories: onPageChange triggered.");
+
+    const executeIndentationLogic = () => {
       try {
         if (!site?.categories) {
-          console.log("Indent Subcategories: No site categories found, returning."); // Debug: No categories
+          console.log("Indent Subcategories: No site categories found, returning.");
           return;
         }
 
         const categoryMap = new Map(site.categories.map(c => [c.id, c]));
-        console.log("Indent Subcategories: Category map created, size:", categoryMap.size); // Debug: Map created
+        console.log("Indent Subcategories: Category map created, size:", categoryMap.size);
 
+        // This selector is now confirmed to be present in the mobile DOM *if given enough time*
         const sidebarSection = document.querySelector('.sidebar-section[data-section-name="categories"]');
         if (!sidebarSection) {
-          console.log("Indent Subcategories: Sidebar section not found, returning."); // Debug: Sidebar section missing
+          console.log("Indent Subcategories: Sidebar section not found, returning.");
           return;
         }
-        console.log("Indent Subcategories: Sidebar section found."); // Debug: Sidebar section found
+        console.log("Indent Subcategories: Sidebar section found.");
 
         const depths = new Map();
         
@@ -47,12 +49,12 @@ export default apiInitializer("1.0.0", (api) => {
             depths.set(categoryId, depth);
           }
         });
-        console.log("Indent Subcategories: Depths map generated, entries:", depths.size, [...depths.entries()]); // Debug: Depths map content
+        console.log("Indent Subcategories: Depths map generated, entries:", depths.size, [...depths.entries()]);
 
         const oldStyle = document.getElementById('subcategory-indent-styles');
         if (oldStyle) {
           oldStyle.remove();
-          console.log("Indent Subcategories: Removed old style tag."); // Debug: Old style removed
+          console.log("Indent Subcategories: Removed old style tag.");
         }
 
         const styleTag = document.createElement('style');
@@ -64,14 +66,23 @@ export default apiInitializer("1.0.0", (api) => {
         });
         
         styleTag.textContent = css;
-        console.log("Indent Subcategories: Generated CSS content:", css); // Debug: Generated CSS
+        console.log("Indent Subcategories: Generated CSS content:", css);
         
         document.head.appendChild(styleTag);
-        console.log("Indent Subcategories: Style tag appended to head."); // Debug: Style tag appended
+        console.log("Indent Subcategories: Style tag appended to head.");
         
       } catch (e) {
-        console.error("Indent Subcategories error:", e); // Debug: Catch errors
+        console.error("Indent Subcategories error:", e);
       }
-    });
+    };
+
+    // Conditional execution based on device type
+    if (site.isMobile) {
+      console.log("Indent Subcategories: Mobile detected, applying setTimeout.");
+      setTimeout(executeIndentationLogic, 100); // Apply delay for mobile
+    } else {
+      console.log("Indent Subcategories: Desktop/Tablet detected, applying requestAnimationFrame.");
+      requestAnimationFrame(executeIndentationLogic); // Use requestAnimationFrame for other devices
+    }
   });
 });
