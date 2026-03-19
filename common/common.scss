@@ -13,3 +13,10 @@
      );
      padding-left: var(--subcategory-indent);
 }
+
+// # force 1 column always # 
+
+.hamburger-panel .revamped .sidebar-section-wrapper.sidebar-section .sidebar-section-content {
+	display: grid;
+	grid-template-columns: 1fr;
+}
